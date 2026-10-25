@@ -1,3 +1,4 @@
+import { ContactForm } from "@/components/contact/ContactForm";
 import { Section } from "@/components/ui/Section";
 
 export function Contact() {
@@ -6,6 +7,8 @@ export function Contact() {
       id="contact"
       title="Get in touch"
       intro="Our team is ready to listen, understand your needs, tackle technical challenges and shape new projects together."
-    />
+    >
+      <ContactForm />
+    </Section>
   );
 }
