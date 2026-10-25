@@ -4,15 +4,8 @@ import { useActionState, useEffect, useRef, useState, type FormEvent, type React
 import { sendContact } from "@/app/actions/contact";
 import { Button } from "@/components/ui/Button";
 import { legalLinks } from "@/data/site";
-import {
-  contactFields,
-  contactSchema,
-  getFieldErrors,
-  readContactForm,
-  type ContactField,
-  type ContactFieldErrors,
-  type ContactState,
-} from "@/lib/contact-schema";
+import { z } from "zod";
+import { contactSchema, type ContactErrors, type ContactInput, type ContactState } from "@/lib/contact-schema";
 
 const initialState: ContactState = { status: "idle" };
 
@@ -21,17 +14,17 @@ const privacyLink = legalLinks.find((link) => link.label === "Privacy Policy");
 const inputClass =
   "w-full rounded-sm border border-neutral-400 bg-white px-4 py-3 text-base text-neutral-800 transition-colors hover:border-neutral-800 focus-visible:border-neutral-800 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-neutral-800 aria-invalid:border-red-600";
 
-function focusFirstInvalid(form: HTMLFormElement | null, errors: ContactFieldErrors) {
-  const first = contactFields.find((field) => errors[field]);
+function focusFirstInvalid(form: HTMLFormElement | null, errors: ContactErrors) {
+  const first = Object.keys(errors)[0];
   if (!first || !form) return;
   const element = form.elements.namedItem(first);
   if (element instanceof HTMLElement) element.focus();
 }
 
 type FieldProps = {
-  name: ContactField;
+  name: keyof ContactInput;
   label: string;
-  error?: string;
+  error?: string[];
   optional?: boolean;
   children: (props: { id: string; "aria-invalid": boolean; "aria-describedby"?: string }) => ReactNode;
 };
@@ -49,7 +42,7 @@ function Field({ name, label, error, optional, children }: FieldProps) {
       {children({ id, "aria-invalid": Boolean(error), "aria-describedby": error ? errorId : undefined })}
       {error && (
         <p id={errorId} className="animate-fade text-sm font-medium text-red-600">
-          {error}
+          {error[0]}
         </p>
       )}
     </div>
@@ -58,33 +51,33 @@ function Field({ name, label, error, optional, children }: FieldProps) {
 
 export function ContactForm() {
   const [state, formAction, isPending] = useActionState(sendContact, initialState);
-  const [clientErrors, setClientErrors] = useState<ContactFieldErrors | null>(null);
+  const [clientErrors, setClientErrors] = useState<ContactErrors | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const statusRef = useRef<HTMLParagraphElement>(null);
 
-  const serverErrors = state.status === "error" ? state.fieldErrors : {};
+  const serverErrors = state.status === "error" ? state.errors : {};
   const errors = clientErrors ?? serverErrors;
   const values = state.status === "error" ? state.values : {};
 
   useEffect(() => {
     if (state.status === "idle") return;
-    if (state.status === "error" && Object.keys(state.fieldErrors).length > 0) {
-      focusFirstInvalid(formRef.current, state.fieldErrors);
+    if (state.status === "error" && Object.keys(state.errors).length > 0) {
+      focusFirstInvalid(formRef.current, state.errors);
     } else {
       statusRef.current?.focus();
     }
   }, [state]);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    const result = contactSchema.safeParse(readContactForm(new FormData(event.currentTarget)));
+    const result = contactSchema.safeParse(Object.fromEntries(new FormData(event.currentTarget)));
     if (result.success) {
       setClientErrors(null);
       return;
     }
     event.preventDefault();
-    const fieldErrors = getFieldErrors(result.error);
-    setClientErrors(fieldErrors);
-    focusFirstInvalid(event.currentTarget, fieldErrors);
+    const newErrors = z.flattenError(result.error).fieldErrors;
+    setClientErrors(newErrors);
+    focusFirstInvalid(event.currentTarget, newErrors);
   }
 
   let statusMessage = "";
@@ -211,7 +204,7 @@ export function ContactForm() {
         </div>
         {errors.privacy && (
           <p id="contact-privacy-error" className="text-sm font-medium text-red-600">
-            {errors.privacy}
+            {errors.privacy[0]}
           </p>
         )}
       </div>
