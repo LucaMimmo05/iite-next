@@ -13,3 +13,6 @@ Base per la sezione "Scelte principali" del README.
 | D7 | Header **sticky** | menu sempre raggiungibile | serve `scroll-padding-top` su `html`, altrimenti i link `#contact` e il focus da tastiera finiscono sotto l'header |
 | D8 | JavaScript solo in due "isole" client: `MobileMenu` e `ContactForm` | tutto il resto è Server Component → meno JS (il sito attuale ha Performance mobile 56) | — |
 | D9 | Schema Zod in `lib/`, condiviso tra form e Server Action | un'unica fonte di verità per regole e tipi | un file `"use server"` può esportare solo funzioni asincrone, quindi lo schema non può stare lì |
+| D10 | Solo la Home, niente pagine Memoria/Oxyleaf | le pagine sono facoltative nella traccia | menu con ancore alle sezioni; card di Oxyleaf e Memoria verso le pagine del sito ufficiale |
+| D11 | `metadataBase` da variabile d'ambiente (`NEXT_PUBLIC_SITE_URL`, poi URL di Vercel, poi localhost) | l'immagine Open Graph deve puntare al dominio dove gira il sito, non a iite.eu | — |
+| D12 | Un solo helper `pageMetadata` per i metadata delle pagine | Next unisce i metadata in modo superficiale: un `openGraph` parziale nella pagina cancellerebbe quello del layout | — |
