@@ -27,6 +27,7 @@ export const site = {
   name: "Institute Itech",
   shortName: "IITE",
   url: "https://www.iite.eu",
+  defaultTitle: "Institute Itech — R&D Institute, Milan",
   tagline:
     "Research and development institute, strategic consultancy, molding societies of tomorrow.",
   description:
@@ -34,9 +35,9 @@ export const site = {
 };
 
 export const mainNav = [
-  { label: "Memoria™", href: "/memoria" },
-  { label: "Oxyleaf™", href: "/oxyleaf" },
-  { label: "Company", href: "/company" },
+  { label: "Mission", href: "/#mission" },
+  { label: "Projects", href: "/#projects" },
+  { label: "People", href: "/#people" },
   { label: "Contact", href: "/#contact" },
 ] satisfies NavLink[];
 
