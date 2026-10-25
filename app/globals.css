@@ -1,9 +1,24 @@
 @import "tailwindcss";
 
 @theme {
+  --color-*: initial;
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-neutral-0: #ffffff;
+  --color-neutral-50: #f2f2f2;
+  --color-neutral-100: #cccccc;
+  --color-neutral-200: #999999;
+  --color-neutral-400: #666666;
+  --color-neutral-600: #333333;
+  --color-neutral-800: #000000;
   --color-brand: #0de98a;
-  --color-ink: #0a0a0a;
-  --font-sans: var(--font-geist-sans);
+  --color-brand-dark: #067a48;
+  --color-brand-soft: #e6fcf2;
+  --color-red-600: #e40014;
+}
+
+@theme inline {
+  --font-sans: var(--font-instrument);
 }
 
 html {
@@ -17,6 +32,115 @@ html {
 }
 
 body {
-  background-color: #ffffff;
-  color: var(--color-ink);
+  background-color: var(--color-neutral-50);
+  color: var(--color-neutral-800);
+}
+
+::selection {
+  background-color: var(--color-brand);
+  color: var(--color-neutral-800);
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem);
+  }
+}
+
+@keyframes lift {
+  from {
+    transform: translateY(2rem);
+  }
+}
+
+@keyframes settle {
+  from {
+    transform: scale(1.08);
+  }
+}
+
+@keyframes draw {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0) rotate(-90deg);
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .animate-lift {
+    animation: lift 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  .animate-rise {
+    animation: rise 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  .animate-settle {
+    animation: settle 2.4s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  .animate-fade {
+    animation: fade 0.4s ease-out both;
+  }
+
+  @supports (animation-timeline: view()) {
+    .reveal-rule {
+      transform-origin: left;
+      animation: draw linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 25%;
+    }
+
+    .reveal-node {
+      animation: pop linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 15%;
+    }
+  }
+
+  .menu-panel {
+    transition:
+      translate 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
+      overlay 0.35s allow-discrete,
+      display 0.35s allow-discrete;
+    translate: 100% 0;
+  }
+
+  .menu-panel[open] {
+    translate: 0 0;
+  }
+
+  .menu-panel::backdrop {
+    transition:
+      opacity 0.35s,
+      overlay 0.35s allow-discrete,
+      display 0.35s allow-discrete;
+    opacity: 0;
+  }
+
+  .menu-panel[open]::backdrop {
+    opacity: 1;
+  }
+
+  @starting-style {
+    .menu-panel[open] {
+      translate: 100% 0;
+    }
+
+    .menu-panel[open]::backdrop {
+      opacity: 0;
+    }
+  }
 }

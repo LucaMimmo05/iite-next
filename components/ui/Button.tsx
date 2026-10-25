@@ -24,11 +24,11 @@ type NativeButtonProps = CommonProps & {
 export type ButtonProps = LinkButtonProps | NativeButtonProps;
 
 const base =
-  "inline-flex items-center justify-center gap-3 rounded-full px-6 py-3 text-sm font-semibold tracking-wide uppercase transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-60";
+  "inline-flex min-h-12 items-center justify-center gap-3 rounded-full px-6 text-base font-semibold transition-[opacity,transform] duration-150 motion-safe:active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:ring-2 focus-visible:ring-white disabled:cursor-not-allowed disabled:opacity-60";
 
 const variants = {
-  primary: "bg-brand text-ink hover:bg-[#3bf0a2] focus-visible:outline-brand",
-  outline: "border-2 border-current hover:bg-white/10 focus-visible:outline-current",
+  primary: "bg-brand text-neutral-800 hover:opacity-90 focus-visible:outline-neutral-800",
+  outline: "border border-current hover:opacity-75 focus-visible:outline-current",
 } satisfies Record<NonNullable<CommonProps["variant"]>, string>;
 
 export function Button(props: ButtonProps) {
@@ -40,7 +40,6 @@ export function Button(props: ButtonProps) {
     return (
       <Link href={props.href} className={className}>
         {props.children}
-        <span aria-hidden="true">→</span>
       </Link>
     );
   }

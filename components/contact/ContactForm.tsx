@@ -19,7 +19,7 @@ const initialState: ContactState = { status: "idle" };
 const privacyLink = legalLinks.find((link) => link.label === "Privacy Policy");
 
 const inputClass =
-  "w-full rounded-md border border-neutral-400 bg-white px-4 py-3 text-base text-ink focus-visible:border-ink focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-ink aria-invalid:border-red-700";
+  "w-full rounded-sm border border-neutral-400 bg-white px-4 py-3 text-base text-neutral-800 transition-colors hover:border-neutral-800 focus-visible:border-neutral-800 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-neutral-800 aria-invalid:border-red-600";
 
 function focusFirstInvalid(form: HTMLFormElement | null, errors: ContactFieldErrors) {
   const first = contactFields.find((field) => errors[field]);
@@ -44,11 +44,11 @@ function Field({ name, label, error, optional, children }: FieldProps) {
     <div className="flex flex-col gap-2">
       <label htmlFor={id} className="font-medium">
         {label}
-        {optional && <span className="font-normal text-neutral-600"> (optional)</span>}
+        {optional && <span className="font-normal text-neutral-400"> (optional)</span>}
       </label>
       {children({ id, "aria-invalid": Boolean(error), "aria-describedby": error ? errorId : undefined })}
       {error && (
-        <p id={errorId} className="text-sm font-medium text-red-700">
+        <p id={errorId} className="animate-fade text-sm font-medium text-red-600">
           {error}
         </p>
       )}
@@ -94,10 +94,10 @@ export function ContactForm() {
 
   const statusTone =
     !isPending && (clientErrors || state.status === "error")
-      ? "border-red-700 bg-red-50 text-red-800"
+      ? "border-red-600 bg-white text-red-600"
       : !isPending && state.status === "success"
-        ? "border-emerald-700 bg-emerald-50 text-emerald-900"
-        : "border-neutral-300 bg-neutral-50 text-ink";
+        ? "border-brand-dark bg-brand-soft text-neutral-800"
+        : "border-neutral-400 bg-neutral-50 text-neutral-800";
 
   return (
     <form
@@ -106,7 +106,7 @@ export function ContactForm() {
       onSubmit={handleSubmit}
       noValidate
       aria-describedby="contact-status"
-      className="grid max-w-3xl gap-6 sm:grid-cols-2"
+      className="grid max-w-3xl gap-6 rounded-md border border-neutral-100 bg-white p-6 sm:grid-cols-2 sm:p-10"
     >
       <div aria-hidden="true" className="hidden">
         <label htmlFor="contact-website">Website</label>
@@ -193,7 +193,7 @@ export function ContactForm() {
             defaultChecked={values.privacy === "on"}
             aria-invalid={Boolean(errors.privacy)}
             aria-describedby={errors.privacy ? "contact-privacy-error" : undefined}
-            className="mt-1 size-5 shrink-0 accent-emerald-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+            className="mt-1 size-5 shrink-0 accent-neutral-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-800"
           />
           <label htmlFor="contact-privacy">
             I have read and accept the{" "}
@@ -201,7 +201,7 @@ export function ContactForm() {
               href={privacyLink?.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-ink"
+              className="font-medium underline decoration-brand-dark decoration-2 underline-offset-4 focus-visible:outline-2 focus-visible:outline-neutral-800"
             >
               Privacy Policy
               <span className="sr-only"> (PDF, opens in a new tab)</span>
@@ -210,7 +210,7 @@ export function ContactForm() {
           </label>
         </div>
         {errors.privacy && (
-          <p id="contact-privacy-error" className="text-sm font-medium text-red-700">
+          <p id="contact-privacy-error" className="text-sm font-medium text-red-600">
             {errors.privacy}
           </p>
         )}
@@ -227,7 +227,9 @@ export function ContactForm() {
           tabIndex={-1}
           className={statusMessage ? `w-full rounded-md border-l-4 px-4 py-3 focus:outline-none ${statusTone}` : "sr-only"}
         >
-          {statusMessage}
+          <span key={statusMessage} className="animate-fade block">
+            {statusMessage}
+          </span>
         </p>
       </div>
     </form>
