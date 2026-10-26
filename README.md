@@ -105,7 +105,7 @@ Home, stesso browser e stesse condizioni (le estensioni del browser erano attive
 | Sito attuale, desktop | 93 | 85 | 92 | 100 |
 | **Sito nuovo, desktop** | 90 | **100** | **96** | 100 |
 
-Su mobile: LCP da 5,6 s a 2,6 s e Total Blocking Time da 630 ms a 90 ms; CLS 0 in entrambi. L'accessibilità passa a 100 perché spariscono gli errori segnalati sul sito attuale (contrasto, bottoni senza nome, ordine dei titoli, link distinti solo dal colore). Il desktop resta a 90 soprattutto per uno Speed Index anomalo (17,6 s, con un LCP di 0,6 s), probabilmente dovuto alla scheda in secondo piano durante la misura: andrebbe ripetuto.
+Su mobile: LCP da 5,6 s a 2,6 s e Total Blocking Time da 630 ms a 90 ms; CLS 0 in entrambi. L'accessibilità passa a 100 perché spariscono gli errori segnalati sul sito attuale (contrasto, bottoni senza nome, ordine dei titoli, link distinti solo dal colore). Su desktop il punteggio Performance (90) è falsato da un solo valore anomalo: lo Speed Index di 17,6 s, incompatibile con un LCP di 0,6 s (probabilmente la scheda era in secondo piano durante la misura). Le altre metriche desktop sono ottime: TBT 0 ms, CLS 0, FCP 0,4 s. La misura andrebbe ripetuta con la scheda in primo piano.
 
 ## Cosa manca e cosa migliorerei con più tempo
 
