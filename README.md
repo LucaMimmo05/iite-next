@@ -95,7 +95,18 @@ L'analisi completa, con il metodo, è in [docs/current-site-audit.md](docs/curre
 | 2.10 | Link "Privacy Policy" distinto solo per colore | Sottolineato, con avviso "(PDF, opens in a new tab)" |
 | 2.11 | Niente `<header>` né `<footer>`; i `<nav>` senza nome | `header`, `main`, `footer`, `nav` con `aria-label`, più uno skip link |
 
-Lighthouse sul sito attuale (Home, mobile): Performance 56, Accessibility 85, Best practices 92, SEO 100.
+### Lighthouse: prima e dopo
+
+Home, stesso browser e stesse condizioni (le estensioni del browser erano attive in entrambe le misure). Sito nuovo misurato su https://iite-next.vercel.app.
+
+| | Performance | Accessibility | Best practices | SEO |
+|---|---|---|---|---|
+| Sito attuale, mobile | 56 | 85 | 92 | 100 |
+| **Sito nuovo, mobile** | **96** | **100** | **96** | 100 |
+| Sito attuale, desktop | 93 | 85 | 92 | 100 |
+| **Sito nuovo, desktop** | 90 | **100** | **96** | 100 |
+
+Su mobile: LCP da 5,6 s a 2,6 s e Total Blocking Time da 630 ms a 90 ms; CLS 0 in entrambi. L'accessibilità passa a 100 perché spariscono gli errori segnalati sul sito attuale (contrasto, bottoni senza nome, ordine dei titoli, link distinti solo dal colore). Il desktop resta a 90 soprattutto per uno Speed Index anomalo (17,6 s, con un LCP di 0,6 s), probabilmente dovuto alla scheda in secondo piano durante la misura: andrebbe ripetuto.
 
 ## Cosa manca e cosa migliorerei con più tempo
 
@@ -106,7 +117,7 @@ Lighthouse sul sito attuale (Home, mobile): Performance 56, Accessibility 85, Be
   - un test end-to-end con Playwright per il form e il menu mobile;
   - un controllo automatico di accessibilità con axe.
 - **`robots.txt` e `sitemap.xml`**, che il sito attuale ha: in Next bastano due piccoli file, `app/robots.ts` (cosa possono visitare i motori di ricerca e dov'è la sitemap) e `app/sitemap.ts` (l'elenco delle pagine). Con una sola pagina sono quasi simbolici, ma diventano utili appena si aggiungono Memoria™ e Oxyleaf™.
-- **Lighthouse sul sito nuovo**, per un confronto prima/dopo misurato.
+- **Performance:** ripetere Lighthouse in una finestra in incognito (senza estensioni) e ridurre ancora le immagini dei progetti, per cui Lighthouse stima circa 87 KB risparmiabili su mobile.
 - **Contenuti:**
   - fonti per i numeri di "Today's panorama";
   - foto per le persone del team che oggi ne sono senza;
