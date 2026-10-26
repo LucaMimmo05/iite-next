@@ -81,8 +81,7 @@ L'analisi completa, con il metodo, è in [docs/current-site-audit.md](docs/curre
 | # | Problema sul sito attuale | Nella nuova versione |
 |---|---|---|
 | 1.1 | Il link "Conditions" apre la privacy policy | Rimosso finché non esiste un documento delle condizioni |
-| 1.2 | Terra non ha una pagina (`/terra` dà 404) | La card di Terra non ha link |
-| 1.3 | `/articles` è nella sitemap ma non è collegata | Fuori scope (solo Home) |
+| 1.2 | `/articles` è nella sitemap ma non è collegata | Fuori scope (solo Home) |
 | 2.1 | Menu mobile: niente `aria-expanded`, Esc non chiude, il focus esce dal menu | `<dialog>` modale + `aria-expanded` |
 | 2.2 | Campi del form senza etichetta associata (solo placeholder) | `<label for>` su ogni campo |
 | 2.3 | Consenso privacy non obbligatorio a livello di campo; il bottone resta disabilitato senza spiegazione | Checkbox nativa obbligatoria, con un messaggio d'errore che spiega cosa fare |

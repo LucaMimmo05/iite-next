@@ -12,8 +12,7 @@ Priorità: **A** = blocca utenti o è un errore evidente · **M** = da corregger
 | # | Problema | Dove | Pri |
 |---|---|---|---|
 | 1.1 | Il link **"Conditions"** nel footer apre `privacy-policy.pdf`, lo stesso file di "Privacy Policy": la pagina delle condizioni non esiste | footer, tutte le pagine | A |
-| 1.2 | Il progetto **Terra** è in Home ma non ha una pagina (`/terra` dà 404) | Home, Progetti | M |
-| 1.3 | La pagina **`/articles`** è nella sitemap ma non è raggiungibile dal menu né dal footer | sitemap.xml | M |
+| 1.2 | La pagina **`/articles`** è nella sitemap ma non è raggiungibile dal menu né dal footer | sitemap.xml | M |
 
 ## 2. Accessibilità
 
