@@ -3,13 +3,13 @@ import { Card } from "@/components/ui/Card";
 import { Section } from "@/components/ui/Section";
 import { team, type TeamMember } from "@/data/team";
 
-function displayName(member: TeamMember) {
+function fullName(member: TeamMember) {
   return member.degree ? `${member.name}, ${member.degree}` : member.name;
 }
 
 export function People() {
-  const featured = team.filter((member: TeamMember) => member.quote);
-  const members = team.filter((member: TeamMember) => !member.quote);
+  const featured = team.filter((member) => member.quote);
+  const others = team.filter((member) => !member.quote);
 
   return (
     <Section
@@ -17,8 +17,8 @@ export function People() {
       title="People"
       intro="We are a multidisciplinary team that brings together strategic vision, scientific expertise and practical technology development."
     >
-      {featured.map((member: TeamMember) => (
-        <figure key={member.slug} className="grid gap-8 sm:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] sm:gap-10">
+      {featured.map((member) => (
+        <figure key={member.slug} className="grid gap-8 sm:grid-cols-[2fr_3fr] sm:gap-10">
           {member.image && (
             <Image
               src={member.image.src}
@@ -33,7 +33,7 @@ export function People() {
               <p>“{member.quote}”</p>
             </blockquote>
             <figcaption>
-              <span className="block text-xl font-semibold tracking-tight font-stretch-condensed">{displayName(member)}</span>
+              <span className="block text-xl font-semibold tracking-tight font-stretch-condensed">{fullName(member)}</span>
               <span className="text-neutral-400">{member.role}</span>
             </figcaption>
           </div>
@@ -41,9 +41,9 @@ export function People() {
       ))}
 
       <ul className="mt-16 grid gap-x-10 sm:grid-cols-2 lg:grid-cols-3">
-        {members.map((member: TeamMember) => (
+        {others.map((member) => (
           <li key={member.slug}>
-            <Card title={displayName(member)} subtitle={member.role} image={member.image} />
+            <Card title={fullName(member)} subtitle={member.role} />
           </li>
         ))}
       </ul>

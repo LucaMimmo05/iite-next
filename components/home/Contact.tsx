@@ -6,6 +6,7 @@ export function Contact() {
     <Section
       id="contact"
       title="Get in touch"
+      divider={false}
       intro="Our team is ready to listen, understand your needs, tackle technical challenges and shape new projects together."
     >
       <ContactForm />

@@ -1,12 +1,12 @@
 import { Card } from "@/components/ui/Card";
 import { Section } from "@/components/ui/Section";
-import { projects, type Project } from "@/data/projects";
+import { projects } from "@/data/projects";
 
 export function Projects() {
   return (
     <Section id="projects" title="Projects">
       <ul className="flex flex-col gap-4">
-        {projects.map((project: Project) => (
+        {projects.map((project) => (
           <li key={project.slug}>
             <Card
               layout="row"

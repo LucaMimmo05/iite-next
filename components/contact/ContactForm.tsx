@@ -1,48 +1,50 @@
 "use client";
 
-import { useActionState, useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { useActionState, useEffect, useRef } from "react";
 import { sendContact } from "@/app/actions/contact";
 import { Button } from "@/components/ui/Button";
-import { legalLinks } from "@/data/site";
-import { z } from "zod";
-import { contactSchema, type ContactErrors, type ContactInput, type ContactState } from "@/lib/contact-schema";
+import type { ContactState } from "@/lib/contact-schema";
 
 const initialState: ContactState = { status: "idle" };
 
-const privacyLink = legalLinks.find((link) => link.label === "Privacy Policy");
-
-const inputClass =
-  "w-full rounded-sm border border-neutral-400 bg-white px-4 py-3 text-base text-neutral-800 transition-colors hover:border-neutral-800 focus-visible:border-neutral-800 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-neutral-800 aria-invalid:border-red-600";
-
-function focusFirstInvalid(form: HTMLFormElement | null, errors: ContactErrors) {
-  const first = Object.keys(errors)[0];
-  if (!first || !form) return;
-  const element = form.elements.namedItem(first);
-  if (element instanceof HTMLElement) element.focus();
-}
-
 type FieldProps = {
-  name: keyof ContactInput;
+  name: string;
   label: string;
-  error?: string[];
-  optional?: boolean;
-  children: (props: { id: string; "aria-invalid": boolean; "aria-describedby"?: string }) => ReactNode;
+  type?: string;
+  autoComplete?: string;
+  required?: boolean;
+  multiline?: boolean;
+  defaultValue?: string;
+  errors?: string[];
 };
 
-function Field({ name, label, error, optional, children }: FieldProps) {
+function Field({ name, label, type = "text", autoComplete, required = false, multiline = false, defaultValue, errors }: FieldProps) {
   const id = `contact-${name}`;
-  const errorId = `${id}-error`;
+  const inputProps = {
+    id,
+    name,
+    required,
+    defaultValue,
+    "aria-invalid": Boolean(errors),
+    "aria-describedby": errors ? `${id}-error` : undefined,
+    className:
+      "w-full rounded-sm border border-neutral-400 bg-white px-4 py-3 hover:border-neutral-800 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-neutral-800 aria-invalid:border-red-600",
+  };
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className={`flex flex-col gap-2 ${multiline ? "sm:col-span-2" : ""}`}>
       <label htmlFor={id} className="font-medium">
         {label}
-        {optional && <span className="font-normal text-neutral-400"> (optional)</span>}
+        {!required && <span className="font-normal text-neutral-400"> (optional)</span>}
       </label>
-      {children({ id, "aria-invalid": Boolean(error), "aria-describedby": error ? errorId : undefined })}
-      {error && (
-        <p id={errorId} className="animate-fade text-sm font-medium text-red-600">
-          {error[0]}
+      {multiline ? (
+        <textarea rows={6} minLength={10} {...inputProps} />
+      ) : (
+        <input type={type} autoComplete={autoComplete} {...inputProps} />
+      )}
+      {errors && (
+        <p id={`${id}-error`} className="animate-fade text-sm font-medium text-red-600">
+          {errors[0]}
         </p>
       )}
     </div>
@@ -51,130 +53,44 @@ function Field({ name, label, error, optional, children }: FieldProps) {
 
 export function ContactForm() {
   const [state, formAction, isPending] = useActionState(sendContact, initialState);
-  const [clientErrors, setClientErrors] = useState<ContactErrors | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const statusRef = useRef<HTMLParagraphElement>(null);
 
-  const serverErrors = state.status === "error" ? state.errors : {};
-  const errors = clientErrors ?? serverErrors;
+  const errors = state.status === "error" ? state.errors : {};
   const values = state.status === "error" ? state.values : {};
 
   useEffect(() => {
     if (state.status === "idle") return;
-    if (state.status === "error" && Object.keys(state.errors).length > 0) {
-      focusFirstInvalid(formRef.current, state.errors);
-    } else {
-      statusRef.current?.focus();
-    }
+    const firstInvalid = formRef.current?.querySelector<HTMLElement>('[aria-invalid="true"]');
+    (firstInvalid ?? statusRef.current)?.focus();
   }, [state]);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    const result = contactSchema.safeParse(Object.fromEntries(new FormData(event.currentTarget)));
-    if (result.success) {
-      setClientErrors(null);
-      return;
-    }
-    event.preventDefault();
-    const newErrors = z.flattenError(result.error).fieldErrors;
-    setClientErrors(newErrors);
-    focusFirstInvalid(event.currentTarget, newErrors);
+  let statusText = "";
+  let statusStyle = "";
+  if (isPending) {
+    statusText = "Sending your message…";
+    statusStyle = "border-neutral-400 bg-neutral-50";
+  } else if (state.status === "error") {
+    statusText = state.message;
+    statusStyle = "border-red-600 bg-white text-red-600";
+  } else if (state.status === "success") {
+    statusText = state.message;
+    statusStyle = "border-brand-dark bg-brand-soft";
   }
-
-  let statusMessage = "";
-  if (isPending) statusMessage = "Sending your message…";
-  else if (clientErrors) statusMessage = "Some fields need your attention. Please check them and try again.";
-  else if (state.status !== "idle") statusMessage = state.message;
-
-  const statusTone =
-    !isPending && (clientErrors || state.status === "error")
-      ? "border-red-600 bg-white text-red-600"
-      : !isPending && state.status === "success"
-        ? "border-brand-dark bg-brand-soft text-neutral-800"
-        : "border-neutral-400 bg-neutral-50 text-neutral-800";
 
   return (
     <form
       ref={formRef}
       action={formAction}
-      onSubmit={handleSubmit}
-      noValidate
-      aria-describedby="contact-status"
       className="grid max-w-3xl gap-6 rounded-md border border-neutral-100 bg-white p-6 sm:grid-cols-2 sm:p-10"
     >
-      <div aria-hidden="true" className="hidden">
-        <label htmlFor="contact-website">Website</label>
-        <input id="contact-website" name="website" type="text" tabIndex={-1} autoComplete="off" />
-      </div>
+      <input name="website" type="text" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
 
-      <Field name="firstName" label="First name" error={errors.firstName}>
-        {(props) => (
-          <input
-            {...props}
-            name="firstName"
-            type="text"
-            autoComplete="given-name"
-            required
-            defaultValue={values.firstName}
-            className={inputClass}
-          />
-        )}
-      </Field>
-
-      <Field name="lastName" label="Last name" error={errors.lastName}>
-        {(props) => (
-          <input
-            {...props}
-            name="lastName"
-            type="text"
-            autoComplete="family-name"
-            required
-            defaultValue={values.lastName}
-            className={inputClass}
-          />
-        )}
-      </Field>
-
-      <Field name="email" label="Email" error={errors.email}>
-        {(props) => (
-          <input
-            {...props}
-            name="email"
-            type="email"
-            autoComplete="email"
-            required
-            defaultValue={values.email}
-            className={inputClass}
-          />
-        )}
-      </Field>
-
-      <Field name="company" label="Company" error={errors.company} optional>
-        {(props) => (
-          <input
-            {...props}
-            name="company"
-            type="text"
-            autoComplete="organization"
-            defaultValue={values.company}
-            className={inputClass}
-          />
-        )}
-      </Field>
-
-      <div className="sm:col-span-2">
-        <Field name="message" label="Message" error={errors.message}>
-          {(props) => (
-            <textarea
-              {...props}
-              name="message"
-              rows={6}
-              required
-              defaultValue={values.message}
-              className={inputClass}
-            />
-          )}
-        </Field>
-      </div>
+      <Field name="firstName" label="First name" autoComplete="given-name" required defaultValue={values.firstName} errors={errors.firstName} />
+      <Field name="lastName" label="Last name" autoComplete="family-name" required defaultValue={values.lastName} errors={errors.lastName} />
+      <Field name="email" label="Email" type="email" autoComplete="email" required defaultValue={values.email} errors={errors.email} />
+      <Field name="company" label="Company" autoComplete="organization" defaultValue={values.company} errors={errors.company} />
+      <Field name="message" label="Message" multiline required defaultValue={values.message} errors={errors.message} />
 
       <div className="flex flex-col gap-2 sm:col-span-2">
         <div className="flex items-start gap-3">
@@ -191,7 +107,7 @@ export function ContactForm() {
           <label htmlFor="contact-privacy">
             I have read and accept the{" "}
             <a
-              href={privacyLink?.href}
+              href="/legal/privacy-policy.pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="font-medium underline decoration-brand-dark decoration-2 underline-offset-4 focus-visible:outline-2 focus-visible:outline-neutral-800"
@@ -203,7 +119,7 @@ export function ContactForm() {
           </label>
         </div>
         {errors.privacy && (
-          <p id="contact-privacy-error" className="text-sm font-medium text-red-600">
+          <p id="contact-privacy-error" className="animate-fade text-sm font-medium text-red-600">
             {errors.privacy[0]}
           </p>
         )}
@@ -214,15 +130,16 @@ export function ContactForm() {
           {isPending ? "Sending…" : "Send message"}
         </Button>
         <p
-          id="contact-status"
           ref={statusRef}
           role="status"
           tabIndex={-1}
-          className={statusMessage ? `w-full rounded-md border-l-4 px-4 py-3 focus:outline-none ${statusTone}` : "sr-only"}
+          className={statusText ? `w-full rounded-md border-l-4 px-4 py-3 focus:outline-none ${statusStyle}` : "sr-only"}
         >
-          <span key={statusMessage} className="animate-fade block">
-            {statusMessage}
-          </span>
+          {statusText && (
+            <span key={statusText} className="animate-fade block">
+              {statusText}
+            </span>
+          )}
         </p>
       </div>
     </form>

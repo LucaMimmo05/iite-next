@@ -14,7 +14,7 @@ export function Header() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="rounded-sm bg-[linear-gradient(var(--color-brand-dark),var(--color-brand-dark))] bg-[length:0%_2px] bg-[position:0_100%] bg-no-repeat py-2 font-medium transition-[background-size] duration-300 ease-out hover:bg-[length:100%_2px] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-neutral-800"
+                  className="rounded-sm py-2 font-medium decoration-brand-dark decoration-2 underline-offset-8 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-neutral-800"
                 >
                   {link.label}
                 </Link>

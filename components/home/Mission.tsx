@@ -5,7 +5,7 @@ export function Mission() {
     <Section
       id="mission"
       title="Mission"
-      tone="brand"
+      divider={false}
       intro="Design and develop advanced scientific and technological solutions that enhance human well-being, strengthen environmental sustainability and support the responsible evolution of social and urban systems."
     />
   );

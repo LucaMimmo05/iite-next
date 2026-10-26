@@ -1,70 +1,35 @@
-export type NavLink = {
+export type NavItem = {
   label: string;
   href: string;
-};
-
-export type Office = {
-  slug: string;
-  street: string;
-  postalCode: string;
-  city: string;
-  province: string;
-};
-
-export type SocialName = "instagram" | "linkedin" | "facebook";
-
-export type SocialLink = {
-  name: SocialName;
-  label: string;
-  href: string;
-};
-
-export type LegalLink = NavLink & {
-  newTab?: boolean;
 };
 
 export const site = {
   name: "Institute Itech",
-  shortName: "IITE",
-  url: "https://www.iite.eu",
-  defaultTitle: "Institute Itech — R&D Institute, Milan",
-  tagline:
-    "Research and development institute, strategic consultancy, molding societies of tomorrow.",
+  title: "Institute Itech — R&D Institute, Milan",
+  tagline: "Research and development institute, strategic consultancy, molding societies of tomorrow.",
   description:
     "Institute Itech is a Milan-based R&D institute building AI-driven platforms for neurodegenerative-disease research, urban environmental systems, and sustainable land management.",
 };
 
-export const mainNav = [
+export const mainNav: NavItem[] = [
   { label: "Mission", href: "/#mission" },
   { label: "Projects", href: "/#projects" },
   { label: "People", href: "/#people" },
   { label: "Contact", href: "/#contact" },
-] satisfies NavLink[];
+];
 
-export const offices = [
-  {
-    slug: "piazza-vetra",
-    street: "Piazza Vetra, 17",
-    postalCode: "20123",
-    city: "Milano",
-    province: "MI",
-  },
-  {
-    slug: "via-san-raffaele",
-    street: "Via San Raffaele, 1",
-    postalCode: "20121",
-    city: "Milano",
-    province: "MI",
-  },
-] satisfies Office[];
+export const offices: string[][] = [
+  ["Piazza Vetra, 17", "20123 Milano (MI)"],
+  ["Via San Raffaele, 1", "20121 Milano (MI)"],
+];
 
-export const socials = [
-  { name: "instagram", label: "Instagram", href: "https://www.instagram.com/iite.eu" },
-  { name: "linkedin", label: "LinkedIn", href: "https://www.linkedin.com/company/instituteitech" },
-  { name: "facebook", label: "Facebook", href: "https://www.facebook.com/institute.iite" },
-] satisfies SocialLink[];
+export const socials: NavItem[] = [
+  { label: "Instagram", href: "https://www.instagram.com/iite.eu" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/company/instituteitech" },
+  { label: "Facebook", href: "https://www.facebook.com/institute.iite" },
+];
 
-export const legalLinks = [
-  { label: "Privacy Policy", href: "/legal/privacy-policy.pdf", newTab: true },
-  { label: "Image Disclaimer", href: "/legal/image-disclaimer.pdf", newTab: true },
-] satisfies LegalLink[];
+export const legalLinks: NavItem[] = [
+  { label: "Privacy Policy", href: "/legal/privacy-policy.pdf" },
+  { label: "Image Disclaimer", href: "/legal/image-disclaimer.pdf" },
+];

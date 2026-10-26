@@ -4,11 +4,7 @@ import logoIcon from "@/public/brand/logo-icon.svg";
 import logoText from "@/public/brand/logo-text.svg";
 import { site } from "@/data/site";
 
-type LogoProps = {
-  inverted?: boolean;
-};
-
-export function Logo({ inverted = false }: LogoProps) {
+export function Logo({ inverted = false }: { inverted?: boolean }) {
   return (
     <Link
       href="/"

@@ -14,7 +14,7 @@ export function Hero() {
         placeholder="blur"
         loading="eager"
         fetchPriority="high"
-        className="animate-settle -z-10 object-cover object-[70%_center]"
+        className="-z-10 object-cover object-[70%_center]"
       />
       <div
         aria-hidden="true"
@@ -23,7 +23,7 @@ export function Hero() {
       <div className="mx-auto flex max-w-6xl flex-col justify-between gap-12 pt-14 pb-12 sm:min-h-[calc(100svh-4rem)] sm:gap-16 sm:pt-24 sm:pb-16">
         <h1
           id="hero-title"
-          className="animate-lift max-w-[16ch] text-5xl leading-[0.95] font-semibold tracking-tight text-balance font-stretch-condensed sm:text-7xl xl:text-8xl"
+          className="max-w-[16ch] text-5xl leading-[0.95] font-semibold tracking-tight text-balance font-stretch-condensed sm:text-7xl xl:text-8xl"
         >
           {site.tagline}
         </h1>

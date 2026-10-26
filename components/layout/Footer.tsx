@@ -1,13 +1,33 @@
 import { Logo } from "@/components/layout/Logo";
-import { legalLinks, offices, site, socials } from "@/data/site";
+import { legalLinks, offices, site, socials, type NavItem } from "@/data/site";
 
-async function CopyrightYear() {
-  "use cache";
-  return new Date().getFullYear();
+type LinkListProps = {
+  label: string;
+  links: NavItem[];
+  note: string;
+};
+
+function LinkList({ label, links, note }: LinkListProps) {
+  return (
+    <nav aria-label={label}>
+      <ul className="flex flex-col gap-3">
+        {links.map((link) => (
+          <li key={link.href}>
+            <a
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-sm underline-offset-4 hover:underline hover:decoration-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            >
+              {link.label}
+              <span className="sr-only"> ({note})</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
 }
-
-const linkClass =
-  "rounded-sm underline-offset-4 hover:underline hover:decoration-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white";
 
 export function Footer() {
   return (
@@ -16,50 +36,22 @@ export function Footer() {
         <div className="flex flex-col gap-8">
           <Logo inverted />
           <div className="grid gap-6 sm:grid-cols-2">
-            {offices.map((office) => (
-              <address key={office.slug} className="not-italic text-neutral-100">
-                {office.street}
+            {offices.map(([street, city]) => (
+              <address key={street} className="text-neutral-100 not-italic">
+                {street}
                 <br />
-                {office.postalCode} {office.city} ({office.province})
+                {city}
               </address>
             ))}
           </div>
         </div>
 
-        <nav aria-label="Social">
-          <ul className="flex flex-col gap-3">
-            {socials.map((social) => (
-              <li key={social.name}>
-                <a href={social.href} target="_blank" rel="noopener noreferrer" className={linkClass}>
-                  {social.label}
-                  <span className="sr-only"> (opens in a new tab)</span>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        <nav aria-label="Legal">
-          <ul className="flex flex-col gap-3">
-            {legalLinks.map((link) => (
-              <li key={link.href}>
-                <a
-                  href={link.href}
-                  target={link.newTab ? "_blank" : undefined}
-                  rel={link.newTab ? "noopener noreferrer" : undefined}
-                  className={linkClass}
-                >
-                  {link.label}
-                  {link.newTab && <span className="sr-only"> (PDF, opens in a new tab)</span>}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <LinkList label="Social" links={socials} note="opens in a new tab" />
+        <LinkList label="Legal" links={legalLinks} note="PDF, opens in a new tab" />
       </div>
 
       <p className="mx-auto mt-16 max-w-6xl border-t border-neutral-600 pt-6 text-sm text-neutral-100">
-        © <CopyrightYear /> {site.name}. All rights reserved.
+        © {new Date().getFullYear()} {site.name}. All rights reserved.
       </p>
     </footer>
   );

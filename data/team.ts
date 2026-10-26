@@ -4,13 +4,13 @@ import sambathImg from "@/public/images/people/sambath-piazza.jpg";
 export type TeamMember = {
   slug: string;
   name: string;
-  degree?: string;     
+  degree?: string;
   role: string;
-  quote?: string;      
+  quote?: string;
   image?: { src: StaticImageData; alt: string };
 };
 
-export const team = [
+export const team: TeamMember[] = [
   {
     slug: "sambath-piazza",
     name: "Sambath Piazza",
@@ -26,4 +26,4 @@ export const team = [
   { slug: "sara-pido", name: "Sara Pidò", degree: "PhD", role: "AI Manager" },
   { slug: "leonardo-spitoni", name: "Leonardo Spitoni", degree: "MSc", role: "Neuroimaging Specialist" },
   { slug: "simone-mattioli", name: "Simone Mattioli", degree: "BSc", role: "Backend Developer" },
-] satisfies TeamMember[];
+];
