@@ -18,31 +18,32 @@ pnpm lint
 pnpm build && pnpm start
 ```
 
-Variabile facoltativa: `NEXT_PUBLIC_SITE_URL` è l'URL pubblico del sito, usato per i link assoluti di Open Graph. Su Vercel viene ricavato da solo; in locale vale `http://localhost:3000`.
+Variabile da impostare in produzione: `NEXT_PUBLIC_SITE_URL`, l'URL pubblico del sito (per esempio `https://iite-next.vercel.app`), usato per i link assoluti di Open Graph. In locale vale `http://localhost:3000`.
 
 ### Provare il form contatti
 
 L'invio è simulato: non parte nessuna email.
 
-- **Errori nel browser:** invia il form vuoto.
-- **Errore del server:** usa un'email che finisce con `@fail.test`, ad esempio `ada@fail.test`.
+- **Errori nel browser:** invia il form vuoto (validazione nativa del browser).
+- **Errori dal server:** scrivi solo spazi nel nome: il browser lo accetta, il server no.
+- **Errore di invio:** usa un'email che finisce con `@fail.test`, ad esempio `ada@fail.test`.
 - **Invio riuscito:** qualsiasi altra email valida.
 
 ## Struttura
 
 ```
 app/
-  layout.tsx            layout comune: skip link, header, main, footer, metadata di base
+  layout.tsx            layout comune: skip link, header, main, footer, metadata (SEO e Open Graph)
   page.tsx              Home: compone le sezioni
   actions/contact.ts    Server Action del form (validazione server + invio simulato)
   opengraph-image.jpg   anteprima per i social (+ .alt.txt)
 components/
-  ui/                   componenti riutilizzabili: Button, Section, Card, StatList
+  ui/                   componenti riutilizzabili: Button, Section, Card
   layout/               Header, MobileMenu, Footer, Logo
   home/                 una sezione per file: Hero, Mission, Projects, People, Numbers, Contact
   contact/              ContactForm (Client Component)
 data/                   contenuti: projects, team, numbers, site (menu, sedi, social, link legali)
-lib/                    schema Zod del form, helper dei metadata, URL del sito
+lib/                    schema Zod del form
 docs/                   analisi del sito attuale, decisioni, registro dell'uso dell'AI
 ```
 
@@ -55,9 +56,10 @@ Il dettaglio è in [docs/decisions.md](docs/decisions.md).
 - **Solo Server Components, tranne due "isole" client:** il menu mobile e il form. Tutte le sezioni leggono i file di dati sul server e non mandano JavaScript al browser.
 - **Nessuna libreria di componenti:** il sito attuale usa shadcn/Radix e ha comunque problemi di accessibilità. Qui markup e comportamento sono scritti a mano.
 - **Menu mobile con `<dialog>` nativo** aperto con `showModal()`. Il browser gestisce Esc, il focus intrappolato e la pagina sotto inerte. Il codice aggiunge solo `aria-expanded`, la chiusura sul clic esterno e la chiusura quando si sceglie una voce.
-- **`Button` tipato come unione discriminata:** con `href` diventa un link, senza diventa un `<button>`. Passare insieme `href` e `type` è un errore di compilazione.
+- **Un solo `Button`** per link e bottoni: con `href` diventa un link, senza diventa un `<button>`.
 - **Form contatti:**
-  - un unico schema **Zod** (`lib/contact-schema.ts`) usato sia nel browser (`onSubmit`) sia sul server (Server Action), così le regole e i messaggi sono gli stessi in entrambi i posti;
+  - **nel browser** la validazione è quella nativa dell'HTML (`required`, `type="email"`, `minLength`): zero codice, messaggi nella lingua del browser;
+  - **sul server** uno schema **Zod** (`lib/contact-schema.ts`) ricontrolla tutto nella Server Action, perché il browser si può aggirare; i suoi errori compaiono sotto i campi;
   - stato tipato come unione `idle | error | success`, gestito con `useActionState`;
   - etichette vere, errori collegati ai campi con `aria-describedby` e `aria-invalid`, focus sul primo campo sbagliato e messaggio di stato in una regione `role="status"`;
   - durante l'invio il bottone è disabilitato e mostra "Sending…";
@@ -68,7 +70,7 @@ Il dettaglio è in [docs/decisions.md](docs/decisions.md).
 - **Card con un solo link**, sul titolo, allargato a tutta la card con `::after`: una sola fermata di Tab e un nome del link breve.
 - **Header sticky** con `scroll-padding-top`, così le ancore e il focus da tastiera non finiscono sotto l'header.
 - **Immagini con `next/image`** importate in modo statico: dimensioni note, anteprima sfocata e `sizes` in base alla griglia. L'immagine dell'hero ha `fetchPriority="high"`, perché in Next 16 `priority` è deprecato.
-- **SEO:** titolo e descrizione, URL canonico, Open Graph e Twitter card generati da un unico helper (`lib/metadata.ts`). Next unisce i metadata di layout e pagina in modo *superficiale* (un `openGraph` nella pagina sostituisce quello del layout): è la causa probabile dell'immagine mancante sul sito attuale. Per questo ogni pagina costruisce il suo `openGraph` completo, e l'immagine arriva dal file `app/opengraph-image.jpg`.
+- **SEO:** titolo, descrizione, URL canonico, Open Graph e Twitter card stanno tutti nei `metadata` di `app/layout.tsx`; l'immagine di anteprima è il file `app/opengraph-image.jpg`. Next unisce i metadata di layout e pagina in modo *superficiale* (un `openGraph` nella pagina sostituisce quello del layout): è la causa probabile dell'immagine mancante sul sito attuale. Con una sola pagina, tenerli tutti nel layout evita il problema.
 - **Contenuti in inglese**, come il sito attuale.
 - **Solo la Home:** il menu porta alle sezioni della Home, e le card di Oxyleaf e Memoria portano alle pagine del sito ufficiale.
 
@@ -97,7 +99,7 @@ Lighthouse sul sito attuale (Home, mobile): Performance 56, Accessibility 85, Be
 
 ## Cosa manca e cosa migliorerei con più tempo
 
-- **Pagine Memoria™ e Oxyleaf™** (facoltative): le farei riusando `Section`, `Card` e `StatList`, con i contenuti in `data/`. Le card porterebbero allora alle pagine interne invece che al sito ufficiale.
+- **Pagine Memoria™ e Oxyleaf™** (facoltative): le farei riusando `Section` e `Card`, con i contenuti in `data/`. Le card porterebbero allora alle pagine interne invece che al sito ufficiale.
 - **Invio reale delle email:** un servizio come Resend dentro la Server Action, con rate limiting (per esempio per IP) oltre all'honeypot.
 - **Test automatici:**
   - unit test dello schema Zod e della Server Action;
