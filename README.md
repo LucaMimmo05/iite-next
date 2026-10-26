@@ -105,6 +105,7 @@ Lighthouse sul sito attuale (Home, mobile): Performance 56, Accessibility 85, Be
   - unit test dello schema Zod e della Server Action;
   - un test end-to-end con Playwright per il form e il menu mobile;
   - un controllo automatico di accessibilità con axe.
+- **`robots.txt` e `sitemap.xml`**, che il sito attuale ha: in Next bastano due piccoli file, `app/robots.ts` (cosa possono visitare i motori di ricerca e dov'è la sitemap) e `app/sitemap.ts` (l'elenco delle pagine). Con una sola pagina sono quasi simbolici, ma diventano utili appena si aggiungono Memoria™ e Oxyleaf™.
 - **Lighthouse sul sito nuovo**, per un confronto prima/dopo misurato.
 - **Contenuti:**
   - fonti per i numeri di "Today's panorama";

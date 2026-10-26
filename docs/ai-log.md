@@ -32,3 +32,4 @@ Per ogni voce: cosa ho chiesto, cosa ha fatto l'AI, cosa ho fatto/verificato io.
 | 26/10 | Separatori uguali | Ha tolto l'animazione che disegnava la riga verde di ogni sezione durante lo scroll: ora tutti i separatori sono identici e fermi | Ho notato che i separatori sembravano diversi |
 | 26/10 | Mission come le altre | Ha messo la Mission sullo stesso fondo delle altre sezioni e tolto il separatore tra hero e Mission (nuova prop `divider` di `Section`) | Ho deciso io colore e separatore |
 | 26/10 | Niente separatori attorno alla sezione nera | Ha tolto i separatori sopra e sotto la sezione Numbers (sfondo nero) | L'ho chiesto io |
+| 26/10 | Spiegazione SEO | Mi ha spiegato i metadata di `layout.tsx` (title, description, canonical, Open Graph, Twitter, `metadataBase`, immagine `opengraph-image`) e cosa manca rispetto al sito attuale | Ho deciso di mettere `robots.txt` e `sitemap.xml` nel README tra le cose da fare |
