@@ -71,6 +71,8 @@ Il dettaglio è in [docs/decisions.md](docs/decisions.md).
 - **Header sticky** con `scroll-padding-top`, così le ancore e il focus da tastiera non finiscono sotto l'header.
 - **Immagini con `next/image`** importate in modo statico: dimensioni note, anteprima sfocata e `sizes` in base alla griglia. L'immagine dell'hero ha `fetchPriority="high"`, perché in Next 16 `priority` è deprecato.
 - **SEO:** titolo, descrizione, URL canonico, Open Graph e Twitter card stanno tutti nei `metadata` di `app/layout.tsx`; l'immagine di anteprima è il file `app/opengraph-image.jpg`. Next unisce i metadata di layout e pagina in modo *superficiale* (un `openGraph` nella pagina sostituisce quello del layout): è la causa probabile dell'immagine mancante sul sito attuale. Con una sola pagina, tenerli tutti nel layout evita il problema.
+- **Stile:** neutri e verde `#0de98a` del sito ufficiale (più una variante scura e una chiara dello stesso verde), font Instrument Sans con la versione stretta per i titoli, separatori verdi con il quadratino ripreso dalla griglia delle immagini del brand.
+- **Poche animazioni, solo CSS:** comparsa di descrizione e bottoni nell'hero, menu mobile che scorre, dissolvenza dei messaggi del form; tutte spente se l'utente ha chiesto di ridurre il movimento (`prefers-reduced-motion`).
 - **Contenuti in inglese**, come il sito attuale.
 - **Solo la Home:** il menu porta alle sezioni della Home, e le card di Oxyleaf e Memoria portano alle pagine del sito ufficiale.
 
@@ -122,7 +124,7 @@ Su mobile: LCP da 5,6 s a 2,6 s e Total Blocking Time da 630 ms a 90 ms; CLS 0 i
   - foto per le persone del team che oggi ne sono senza;
   - un vero documento "Conditions".
 - **Immagini:** gli originali sono pesanti (fino a 5644×3168 px). `next/image` le ridimensiona, ma ridurle prima alleggerirebbe il repository.
-- **`aria-current`** sulla voce di menu della sezione visibile, e i font del brand (Aspekta) al posto di Geist.
+- **`aria-current`** sulla voce di menu della sezione visibile, e il font del brand (Aspekta) al posto di Instrument Sans, se avessimo il file del font.
 
 ## Uso di strumenti AI
 
